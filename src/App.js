@@ -12,7 +12,6 @@ function AddGameForm({addGame}) {
   }
 
   return (
-    
     <form onSubmit={handleSubmit}>
       <h2>Add game</h2>
       <label>Home team:
@@ -33,7 +32,6 @@ function AddGameForm({addGame}) {
     </form>
   )
 }
-
 
 export default function App() {
   var [games, setGames] = useState([]);
@@ -56,7 +54,6 @@ export default function App() {
   }
 
   function onScoreUpdated(homeTeamScore, awayTeamScore, timestamp) {
-
     var gameIndex = games.findIndex((el) => el.timestamp === timestamp);
     
     if(homeTeamScore!=='' && Number.isInteger(parseInt(homeTeamScore))) games[gameIndex].homeTeamScore = parseInt(homeTeamScore);
@@ -82,11 +79,6 @@ export default function App() {
            />
           </div>
         </div>
-        
-          
-          
-
-
     </div>
   );
 }

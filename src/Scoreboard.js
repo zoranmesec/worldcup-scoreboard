@@ -28,11 +28,10 @@ function Summary({games}) {
         <div>
             <h2>Summary:</h2>
             {sorted.map((game) => 
-            <div key={game.timestamp}>
-                {game.homeTeam} : {game.awayTeam} ({game.homeTeamScore} : {game.awayTeamScore}) started on {formatDate(game.timestamp)}
-                
-            </div>
-                )}
+              <div key={game.timestamp}>
+                  {game.homeTeam} : {game.awayTeam} ({game.homeTeamScore} : {game.awayTeamScore}) started on {formatDate(game.timestamp)}
+              </div>
+            )}
         </div>
     )
   }
@@ -81,7 +80,6 @@ function Game({homeTeam, homeTeamScore, awayTeam, awayTeamScore, timestamp, onFi
         updateScore={onScoreUpdate} />
       <hr />
       </div>
-      
     );
 }
 
@@ -106,7 +104,5 @@ export default class Scoreboard extends React.Component {
             </div>
             );
       }
-  
-
 }
 
