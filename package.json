@@ -1,6 +1,6 @@
 {
-  "name": "worldcup-scorecard",
-  "version": "0.3.0",
+  "name": "worldcup-scoreboard",
+  "version": "0.4.0",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
