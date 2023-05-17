@@ -8,7 +8,7 @@ function AddGameForm({addGame}) {
   const [awayTeam, setAwayTeam] = useState("");
   const handleSubmit = (event) => {
     event.preventDefault();
-    addGame(homeTeam, awayTeam);
+    if(homeTeam && awayTeam) addGame(homeTeam, awayTeam);
   }
 
   return (
@@ -46,6 +46,7 @@ export default function App() {
       awayTeamScore:0,
       timestamp: Date.now()
     });
+    //not sure why array needs to be copied in order components to update
     var map1 = games.map(game => game)
     setGames( map1);
   }
@@ -58,8 +59,8 @@ export default function App() {
 
     var gameIndex = games.findIndex((el) => el.timestamp === timestamp);
     
-    if(homeTeamScore!=='') games[gameIndex].homeTeamScore = parseInt(homeTeamScore);
-    if(awayTeamScore!=='') games[gameIndex].awayTeamScore = parseInt(awayTeamScore);
+    if(homeTeamScore!=='' && Number.isInteger(parseInt(homeTeamScore))) games[gameIndex].homeTeamScore = parseInt(homeTeamScore);
+    if(awayTeamScore!=='' && Number.isInteger(parseInt(awayTeamScore))) games[gameIndex].awayTeamScore = parseInt(awayTeamScore);
     setGames(games.map((game => game)));
   }
 
