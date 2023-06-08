@@ -18,4 +18,13 @@ const items = await screen.findAllByText(/game/)
 expect(items).toHaveLength(2)
 });
 
+// test('test game finished', async () => {
+//   render(<App />);
+//   const input = getByLabelText("Some Label")
+//   input.value = 'ENG'
+//   fireEvent.change(input, {target: {value: '23'}})
+//   expect(input.value).toBe('$23')
+
+// });
+
 

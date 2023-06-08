@@ -1,5 +1,6 @@
 import React from 'react';
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { GamesContext } from './context'
 
 
 function formatDate(ts) {
@@ -12,28 +13,29 @@ function formatDate(ts) {
  * @param {*} games Array of games
  * @returns rendered html
  */
-function Summary({games}) {
-    var tmp = games.map((game) => game);
-    var sorted = tmp.sort((a, b) => {
-        if((a.homeTeamScore + a.awayTeamScore) < (b.homeTeamScore + b.awayTeamScore)) return 1;
-        if((a.homeTeamScore + a.awayTeamScore) > (b.homeTeamScore + b.awayTeamScore)) return -1;
-        
-        if(a.timestamp < b.timestamp) return 1;
-        if(a.timestamp > b.timestamp) return -1;
-        return 0;
+function Summary() {
+  const games = useContext(GamesContext);
+  var tmp = games.map((game) => game);
+  var sorted = tmp.sort((a, b) => {
+      if((a.homeTeamScore + a.awayTeamScore) < (b.homeTeamScore + b.awayTeamScore)) return 1;
+      if((a.homeTeamScore + a.awayTeamScore) > (b.homeTeamScore + b.awayTeamScore)) return -1;
+      
+      if(a.timestamp < b.timestamp) return 1;
+      if(a.timestamp > b.timestamp) return -1;
+      return 0;
 
-    });
-  
-    return (
-        <div>
-            <h2>Summary:</h2>
-            {sorted.map((game) => 
-              <div key={game.timestamp}>
-                  {game.homeTeam} : {game.awayTeam} ({game.homeTeamScore} : {game.awayTeamScore}) started on {formatDate(game.timestamp)}
-              </div>
-            )}
-        </div>
-    )
+  });
+
+  return (
+      <div>
+          <h2>Summary:</h2>
+          {sorted.map((game) => 
+            <div key={game.timestamp}>
+                {game.homeTeam} : {game.awayTeam} ({game.homeTeamScore} : {game.awayTeamScore}) started on {formatDate(game.timestamp)}
+            </div>
+          )}
+      </div>
+  )
   }
 
 function UpdateScoreForm({homeTeamScoreProp, awayTeamScoreProp, timestamp, updateScore}) {
@@ -83,26 +85,24 @@ function Game({homeTeam, homeTeamScore, awayTeam, awayTeamScore, timestamp, onFi
     );
 }
 
-
-export default class Scoreboard extends React.Component {
-    render() {
-        return (
-            <div>
-                <h2>Scoreboard:</h2>
-                {this.props.games.map((game) => 
-                <Game 
-                    key={game.homeTeam + game.awayTeam + game.timestamp} 
-                    homeTeam={game.homeTeam} 
-                    homeTeamScore={game.homeTeamScore} 
-                    awayTeam={game.awayTeam} 
-                    awayTeamScore={game.awayTeamScore} 
-                    timestamp={game.timestamp} 
-                    onFinish={() => this.props.finishedGame(game.timestamp)}
-                    onScoreUpdate={(homeTeamScore, awayTeamScore, timestamp) => this.props.onScoreUpdate(homeTeamScore, awayTeamScore, timestamp)}
-                    />)}
-                <Summary games={this.props.games}/>
-            </div>
-            );
-      }
+export default function Scoreboard(props)  {
+  const games = useContext(GamesContext);
+    return (
+        <div>
+            <h2>Scoreboard:</h2>
+            {games.map((game) => 
+            <Game 
+                key={game.homeTeam + game.awayTeam + game.timestamp} 
+                homeTeam={game.homeTeam} 
+                homeTeamScore={game.homeTeamScore} 
+                awayTeam={game.awayTeam} 
+                awayTeamScore={game.awayTeamScore} 
+                timestamp={game.timestamp} 
+                onFinish={() => props.finishedGame(game.timestamp)}
+                onScoreUpdate={(homeTeamScore, awayTeamScore, timestamp) => props.onScoreUpdate(homeTeamScore, awayTeamScore, timestamp)}
+                />)}
+            <Summary/>
+        </div>
+        );
 }
 

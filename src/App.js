@@ -1,9 +1,11 @@
 import logo from './logo.svg';
 import './App.css';
 import Scoreboard from './Scoreboard';
+import { GamesContext } from './context'
 import { useState } from "react";
 
-function AddGameForm({addGame}) {
+
+function AddGameComponent({addGame}) {
   const [homeTeam, setHomeTeam] = useState("");
   const [awayTeam, setAwayTeam] = useState("");
   const handleSubmit = (event) => {
@@ -44,6 +46,8 @@ export default function App() {
       awayTeamScore:0,
       timestamp: Date.now()
     });
+
+
     //not sure why array needs to be copied in order components to update
     var map1 = games.map(game => game)
     setGames( map1);
@@ -70,13 +74,14 @@ export default function App() {
         </header>
         <div className='Main-container'>
           <div className='Add-game'>
-            <AddGameForm addGame={addGame} /></div>
+            <AddGameComponent addGame={addGame} /></div>
           <div className='Scoreboard'>
-            <Scoreboard 
-            games={games} 
-            finishedGame={onGameFinished}
-            onScoreUpdate={onScoreUpdated}
-           />
+            <GamesContext.Provider value={games}>
+              <Scoreboard 
+              finishedGame={onGameFinished}
+              onScoreUpdate={onScoreUpdated}
+            />
+           </GamesContext.Provider>
           </div>
         </div>
     </div>
