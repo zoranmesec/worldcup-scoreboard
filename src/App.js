@@ -26,10 +26,7 @@ export default function App() {
             <GamesContext.Provider value={value}>
             {useMemo(() => (
             <>
-              <Scoreboard 
-              // finishedGame={onGameFinished}
-              // onScoreUpdate={onScoreUpdated}
-            />
+              <Scoreboard />
             </>
       ), [])}
 
