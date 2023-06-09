@@ -2,68 +2,16 @@ import logo from './logo.svg';
 import './App.css';
 import Scoreboard from './Scoreboard';
 import { GamesContext } from './context'
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
-
-function AddGameComponent({addGame}) {
-  const [homeTeam, setHomeTeam] = useState("");
-  const [awayTeam, setAwayTeam] = useState("");
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if(homeTeam && awayTeam) addGame(homeTeam, awayTeam);
-  }
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <h2>Add game</h2>
-      <label>Home team:
-      <input 
-          type="text" 
-          value={homeTeam}
-          onChange={(e) => setHomeTeam(e.target.value)}
-        />
-      </label><br />
-      <label>Away team:
-      <input 
-          type="text" 
-          value={awayTeam}
-          onChange={(e) => setAwayTeam(e.target.value)}
-        />
-      </label>
-      <input type="submit" value="Add game"/>
-    </form>
-  )
-}
 
 export default function App() {
   var [games, setGames] = useState([]);
 
-  function addGame(homeTeam, awayTeam) {
-    games.push({
-      homeTeam: homeTeam, 
-      homeTeamScore: 0, 
-      awayTeam: awayTeam,
-      awayTeamScore:0,
-      timestamp: Date.now()
-    });
-
-
-    //not sure why array needs to be copied in order components to update
-    var map1 = games.map(game => game)
-    setGames( map1);
-  }
-
-  function onGameFinished(timestamp) {
-    setGames(games.filter(game => game.timestamp!== timestamp));
-  }
-
-  function onScoreUpdated(homeTeamScore, awayTeamScore, timestamp) {
-    var gameIndex = games.findIndex((el) => el.timestamp === timestamp);
-    
-    if(homeTeamScore!=='' && Number.isInteger(parseInt(homeTeamScore))) games[gameIndex].homeTeamScore = parseInt(homeTeamScore);
-    if(awayTeamScore!=='' && Number.isInteger(parseInt(awayTeamScore))) games[gameIndex].awayTeamScore = parseInt(awayTeamScore);
-    setGames(games.map((game => game)));
-  }
+  const value = useMemo(
+    () => ({ games, setGames }), 
+    [games]
+  );
 
   return (
     <div className="App">
@@ -73,14 +21,18 @@ export default function App() {
         </div>
         </header>
         <div className='Main-container'>
-          <div className='Add-game'>
-            <AddGameComponent addGame={addGame} /></div>
+
           <div className='Scoreboard'>
-            <GamesContext.Provider value={games}>
+            <GamesContext.Provider value={value}>
+            {useMemo(() => (
+            <>
               <Scoreboard 
-              finishedGame={onGameFinished}
-              onScoreUpdate={onScoreUpdated}
+              // finishedGame={onGameFinished}
+              // onScoreUpdate={onScoreUpdated}
             />
+            </>
+      ), [])}
+
            </GamesContext.Provider>
           </div>
         </div>
