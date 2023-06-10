@@ -64,16 +64,16 @@ function AddCardComponent() {
   }
   
   if(games.length !==0) {
-    const listItems = games.map(game => <option value={game.timestamp} key={game.timestamp}>{game.homeTeam} vs {game.awayTeam}</option>);
+    const listItems = games.map(game => <option value={game.timestamp} data-testid="select-option" key={game.timestamp}>{game.homeTeam} vs {game.awayTeam}</option>);
     return (
       <div><h2>Add cards</h2>
-      <select onChange={onChange}>
-        <option value="">Please select a game</option>
+      <select data-testid="select" onChange={onChange}>
+        <option data-testid="select-option" value="">Please select a game</option>
         {listItems}
       </select><br />
-      <button className='yellow' onClick={ e => addYellowCard('home')} >Add yellow card to home team</button><button className='yellow' onClick={  e => addYellowCard('away')} >Add yellow card to away team</button>
+      <button className='yellow' data-testid="yellowhome" onClick={ e => addYellowCard('home')} >Add yellow card to home team</button><button data-testid="yellowaway" className='yellow' onClick={  e => addYellowCard('away')} >Add yellow card to away team</button>
       <br />
-      <button className='red' onClick={ e => addRedCard('home')} >Add red card to home team</button><button className='red' onClick={ e => addRedCard('away')} >Add red card to away team</button>
+      <button className='red' data-testid="redhome" onClick={ e => addRedCard('home')} >Add red card to home team</button><button className='red' data-testid="redaway" onClick={ e => addRedCard('away')} >Add red card to away team</button>
       </div>
     )
   } else
@@ -127,6 +127,7 @@ function UpdateScoreComponent({timestamp}) {
     const [playerName, setPlayerName] = useState("");
     const [playerLastname, setPlayerLastname] = useState("");
     const {games, setGames} = useContext(GamesContext);
+    var gameIndex = games.findIndex((el) => el.timestamp === timestamp);
 
     const increaseHomeTeamScore = (e) => {
       e.preventDefault();
@@ -156,20 +157,22 @@ function UpdateScoreComponent({timestamp}) {
         <label>Type player name:</label>
         <input 
             type="text" 
+            data-testid={ 'playername' + games[gameIndex].homeTeam + games[gameIndex].awayTeam}
             onChange={(e) => setPlayerName(e.target.value)}
           /><br />
           <label>Type player last name:</label>
           <input 
             type="text" 
+            data-testid={ 'playerlastname' + games[gameIndex].homeTeam + games[gameIndex].awayTeam}
             onChange={(e) => setPlayerLastname(e.target.value)}
           /><br />
           <label>Add home team goal:</label>
-          <button onClick={ increaseHomeTeamScore} >+</button><br />
+          <button data-testid={ 'addgoalhome' + games[gameIndex].homeTeam + games[gameIndex].awayTeam} onClick={ increaseHomeTeamScore} >+</button><br />
         <label>Add away team goal:
         </label>
         {/* <button onClick={ decreaseAwayTeamScore} >-</button> */}
 
-        <button onClick={ increaseAwayTeamScore}>+</button>
+        <button data-testid={ 'addgoalaway' + games[gameIndex].homeTeam + games[gameIndex].awayTeam} onClick={ increaseAwayTeamScore}>+</button>
       </div>
     )
   }
@@ -182,12 +185,12 @@ function GameActivity({timestamp}) {
   if(games[gameIndex].goals || games[gameIndex].cards) {
     const activities = games[gameIndex].goals.concat(games[gameIndex].cards).sort((a,b) => b.ts - a.ts);
     const listItems = activities.map(activity => {
-      if(activity.player) return <li key={activity.ts}>GOAL! {activity.player} on {formatDate(activity.ts)} for {activity.type} team</li>
-      else return <li key={activity.ts}>card {activity.cardType} on {formatDate(activity.ts)} for {activity.type} team</li>
+      if(activity.player) return <li data-testid="activity" key={activity.ts}>GOAL! {activity.player} on {formatDate(activity.ts)} for {activity.type} team</li>
+      else return <li data-testid="activity" key={activity.ts}>card {activity.cardType} on {formatDate(activity.ts)} for {activity.type} team</li>
       
     });
     return (
-      <ul>{listItems}</ul>
+      <ul data-testid="activities">{listItems}</ul>
     )
   } else
     return '';
